@@ -3,7 +3,7 @@
 @include('Components.NaBar.navbar')
 @section('content')
     <div
-        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7f0e3; min-height: 100vh; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #ffe600; min-height: 100vh; display: flex; flex-direction: row; justify-content: center; align-items: center;">
         <Sidebar />
         <main style="flex: 1; padding: 20px; display: flex; flex-direction: column; align-items: center;">
             <h1

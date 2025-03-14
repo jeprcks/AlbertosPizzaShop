@@ -1,174 +1,316 @@
 'use client';
 import React, { useState } from 'react';
+import { useTransactions } from '@/context/transactioncontext';
 import { useRouter } from 'next/navigation';
-import { useSales } from '../Hooks/useSales/useSales';
-import Image from 'next/image';
-import { Receipt } from '../../components/receipt';
+
+interface Product {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+}
+
+interface Transaction {
+    orderNumber: number;
+    date: string;
+    orderList: Product[];
+    totalPrice: number;
+}
+
 export default function Sales(): JSX.Element {
-    const { products, cart, loading, error, addToCart, setCart, handleCheckout, showReceipt, setShowReceipt, currentTransaction } = useSales();
+    const router = useRouter();
+    const [products, setProducts] = useState<Product[]>([
+        { id: 1, name: 'Brown Spanish Latte', price: 39, quantity: 0 },
+        { id: 2, name: 'Oreo Coffee', price: 39, quantity: 0 },
+        { id: 3, name: 'Black Forest', price: 39, quantity: 0 },
+        { id: 4, name: 'Don Darko', price: 39, quantity: 0 },
+        { id: 5, name: 'Donya Berry', price: 39, quantity: 0 },
+        { id: 6, name: 'Iced Caramel', price: 39, quantity: 0 },
+        { id: 7, name: 'Macha Berry', price: 39, quantity: 0 },
+        { id: 8, name: 'Macha', price: 39, quantity: 0 },
+    ]);
 
-    console.log('Products:', products);
+    const { addTransaction, transactions = [] } = useTransactions();
 
-    const calculateSubtotal = () => {
-        return cart.reduce((total, item) => total + (item.product_price * item.quantity), 0);
+    const [transaction, setTransaction] = useState<Transaction | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState();
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [orderNumber, setOrderNumber] = useState<number>(1);
+
+    const incrementQuantity = (id: number): void => {
+        setProducts((prev) =>
+            prev.map((product) =>
+                product.id === id
+                    ? { ...product, quantity: product.quantity + 1 }
+                    : product
+            )
+        );
     };
 
-    const updateQuantity = (productId: string, newQuantity: number) => {
-        const product = products.find(p => p.product_id === productId);
-        if (!product) return;
+    const decrementQuantity = (id: number): void => {
+        setProducts((prev) =>
+            prev.map((product) =>
+                product.id === id && product.quantity > 0
+                    ? { ...product, quantity: product.quantity - 1 }
+                    : product
+            )
+        );
+    };
 
-        if (newQuantity > product.product_stock) {
-            alert('Not enough stock available!');
+    const calculateTotal = (): number => {
+        return products.reduce(
+            (sum, product) => sum + product.price * product.quantity,
+            0
+        );
+    };
+
+    const handleCheckout = (): void => {
+        const orderedProducts = products.filter((product) => product.quantity > 0);
+
+        if (orderedProducts.length === 0) {
+            alert('No products selected for checkout.');
             return;
         }
 
-        if (newQuantity <= 0) {
-            setCart(cart.filter(item => item.product_id !== productId));
-            return;
-        }
+        const totalPrice = calculateTotal();
+        const newTransaction: Transaction = {
+            orderNumber: orderNumber,
+            date: new Date().toLocaleString(),
+            orderList: orderedProducts,
+            totalPrice: totalPrice,
+        };
 
-        setCart(cart.map(item =>
-            item.product_id === productId
-                ? { ...item, quantity: newQuantity }
-                : item
-        ));
+        addTransaction(newTransaction);
+        setTransaction(newTransaction);
+        setShowModal(true);
+        setOrderNumber(orderNumber + 1);
     };
 
-    const removeFromCart = (productId: string) => {
-        setCart(cart.filter(item => item.product_id !== productId));
+    const closeModal = (): void => {
+        setShowModal(false);
+        console.log(products);
+        
+        // setProducts((prev) =>
+        //     prev.map((product) => ({ ...product, quantity: 0 }))
+        // );
     };
-
-    if (loading) {
-        return <div className="flex justify-center items-center h-screen">Loading products...</div>;
-    }
-
-    if (error) {
-        return <div className="flex justify-center items-center h-screen flex-col gap-4">
-            <div className="text-red-500">Error: {error}</div>
-        </div>;
-    }
 
     return (
-        <div className="min-h-screen bg-[#fff8e7]">
-            <div className="container mx-auto px-4 py-8">
-                <div className="flex justify-between items-center mb-8">
-                    <button
-                        onClick={() => window.location.href = '/homepage'}
-                        className="bg-[#6b4226] text-white px-4 py-2 rounded-lg hover:bg-[#3a2117] transition-colors"
-                    >
-                        ← Back
-                    </button>
-                    <h1 className="text-3xl font-bold text-center text-[#4b3025]">Sales Interface</h1>
-                    <div className="w-[76px]"></div> {/* Spacer for alignment */}
-                </div>
+        <div style={styles.container}>
+            <header style={styles.header}>
+                <button
+                    style={styles.backButton}
+                    onClick={() => router.push('/homepage')}
+                >
+                    ←
+                </button>
+                <h1 style={styles.title}>Sales Interface</h1>
+            </header>
 
-                {/* Debug info */}
-                <div className="flex justify-center items-center min-h-screen">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {products && products.map((product) => (
-                            <div key={product.product_id}
-                                className="product-card bg-white rounded-lg shadow-lg overflow-hidden hover:transform hover:-translate-y-1 transition-transform duration-200"
-                            >
-                                <div className="relative w-[200px] h-[200px] bg-[#fff8e7] border-b border-gray-200 mx-auto">
-                                    <Image
-                                        src={`http://localhost:8000/images/${product.product_image}`}
-                                        alt={product.product_name}
-                                        fill
-                                        className="object-cover"
-                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                                    />
-                                </div>
-                                <div className="p-4 text-center">
-                                    <h2 className="text-lg font-bold text-[#4b3025] mb-2">{product.product_name}</h2>
-                                    <p className="text-[#6b4226] text-md font-bold mb-3">₱{product.product_price?.toFixed(2)}</p>
-                                    <button
-                                        onClick={() => addToCart(product)}
-                                        className="w-full bg-[#6b4226] text-white py-2 rounded hover:bg-[#4b3025] transition-colors"
-                                    >
-                                        Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-
-                <div className="bg-white rounded-lg shadow-lg p-6 mt-8">
-                    <h2 className="text-2xl font-bold text-[#4b3025] mb-4">Your Cart</h2>
-                    <div className="overflow-x-auto">
-                        <table className="w-full mb-4">
-                            <thead>
-                                <tr className="border-b">
-                                    <th className="text-left p-2">Product</th>
-                                    <th className="text-left p-2">Price</th>
-                                    <th className="text-left p-2">Quantity</th>
-                                    <th className="text-left p-2">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {cart.map((item) => (
-                                    <tr key={item.product_id} className="border-b">
-                                        <td className="p-2">{item.product_name}</td>
-                                        <td className="p-2">₱{item.product_price.toFixed(2)}</td>
-                                        <td className="p-2">
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => updateQuantity(item.product_id, item.quantity - 1)}
-                                                    className="px-2 py-1 bg-gray-200 rounded"
-                                                >
-                                                    -
-                                                </button>
-                                                <input
-                                                    type="number"
-                                                    value={item.quantity}
-                                                    onChange={(e) => updateQuantity(item.product_id, parseInt(e.target.value))}
-                                                    className="w-16 text-center border rounded p-1"
-                                                    min="1"
-                                                    max={item.product_stock}
-                                                />
-                                                <button
-                                                    onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
-                                                    className="px-2 py-1 bg-gray-200 rounded"
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td className="p-2">
-                                            <button
-                                                onClick={() => removeFromCart(item.product_id)}
-                                                className="text-red-500 hover:text-red-700"
-                                            >
-                                                Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="flex justify-between items-center mt-4">
-                        <div className="text-lg font-bold text-[#4b3025]">
-                            Subtotal: ₱{calculateSubtotal().toFixed(2)}
+            <div style={styles.productList}>
+                {products.map((product) => (
+                    <div key={product.id} style={styles.productCard}>
+                        <div>
+                            <h2 style={styles.productName}>{product.name}</h2>
+                            <p style={styles.productPrice}>₱{product.price.toFixed(2)}</p>
                         </div>
-                        <button
-                            onClick={handleCheckout}
-                            className="bg-[#10b981] text-white px-6 py-2 rounded hover:bg-[#059669] transition-colors"
-                            disabled={cart.length === 0}
-                        >
-                            Proceed to Checkout
+                        <div style={styles.quantityControls}>
+                            <button
+                                style={styles.decrementButton}
+                                onClick={() => decrementQuantity(product.id)}
+                            >
+                                −
+                            </button>
+                            <span style={styles.quantity}>{product.quantity}</span>
+                            <button
+                                style={styles.incrementButton}
+                                onClick={() => incrementQuantity(product.id)}
+                            >
+                                +
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <footer style={styles.footer}>
+                <div style={styles.totalContainer}>
+                    <span style={styles.totalLabel}>Total:</span>
+                    <span style={styles.totalPrice}>
+                        ₱{calculateTotal().toFixed(2)}
+                    </span>
+                </div>
+                <button style={styles.checkoutButton} onClick={handleCheckout}>
+                    Checkout
+                </button>
+            </footer>
+
+            {showModal && transaction && (
+                <div style={styles.modalOverlay}>
+                    <div style={styles.modal}>
+                        <h2 style={styles.modalTitle}>TRANSACTION SUCCESSFUL</h2>
+                        <p>Order Number: {transaction.orderNumber}</p>
+                        <p>Date: {transaction.date}</p>
+                        <h3>Order List:</h3>
+                        <ul>
+                            {transaction.orderList.map((item) => (
+                                <li key={item.id}>
+                                    {item.name} - {item.quantity} × ₱{item.price.toFixed(2)}
+                                </li>
+                            ))}
+                        </ul>
+                        <p>
+                            Total: <strong>₱{transaction.totalPrice.toFixed(2)}</strong>
+                        </p>
+                        <button style={styles.modalButton} onClick={closeModal}>
+                            OK
                         </button>
                     </div>
                 </div>
-            </div>
-            {showReceipt && currentTransaction && (
-                <Receipt
-                    transaction={currentTransaction}
-                    onClose={() => setShowReceipt(false)}
-                    onPrint={() => window.print()}
-                />
             )}
         </div>
     );
 }
+
+const styles: { [key: string]: React.CSSProperties } = {
+    container: {
+        fontFamily: 'Arial, sans-serif',
+        backgroundColor: '#f7f0e3',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    header: {
+        backgroundColor: '#6b4226',
+        color: 'white',
+        padding: '10px 20px',
+        display: 'flex',
+        alignItems: 'center',
+    },
+    backButton: {
+        marginRight: '10px',
+        padding: '10px',
+        backgroundColor: '#4b3025',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    },
+    title: {
+        fontSize: '1.5rem',
+    },
+    productList: {
+        flex: 1,
+        overflowY: 'auto',
+        padding: '20px',
+    },
+    productCard: {
+        backgroundColor: '#fff8e7',
+        borderRadius: '8px',
+        padding: '15px 20px',
+        marginBottom: '15px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+    },
+    productName: {
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+        color: '#4b3025',
+    },
+    productPrice: {
+        fontSize: '1rem',
+        color: '#6b4226',
+    },
+    quantityControls: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    decrementButton: {
+        padding: '10px',
+        backgroundColor: '#d9534f',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    },
+    incrementButton: {
+        padding: '10px',
+        backgroundColor: '#5cb85c',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    },
+    quantity: {
+        margin: '0 15px',
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+    },
+    footer: {
+        backgroundColor: '#fff',
+        padding: '20px',
+        borderTop: '1px solid #ddd',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    totalContainer: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    totalLabel: {
+        fontSize: '1.2rem',
+        marginRight: '10px',
+        fontWeight: 'bold',
+        color: '#4b3025',
+    },
+    totalPrice: {
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        color: '#6b4226',
+    },
+    checkoutButton: {
+        padding: '15px 30px',
+        backgroundColor: '#6b4226',
+        color: 'white',
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: 'pointer',
+    },
+    modalOverlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        backgroundColor: '#fff',
+        borderRadius: '12px',
+        padding: '20px',
+        maxWidth: '400px',
+        textAlign: 'center',
+    },
+    modalTitle: {
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        marginBottom: '20px',
+    },
+    modalButton: {
+        padding: '10px 20px',
+        backgroundColor: '#6b4226',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        marginTop: '20px',
+    },
+};

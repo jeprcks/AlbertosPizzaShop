@@ -231,8 +231,8 @@
 
                         let transactionContent = `
                             <div class="receipt-header">
-                                <h4>Don Macchiatos</h4>
-                                <p class="text-muted">Fuel your day, one cup at a time</p>
+                                <h4>Albertos Pizza</h4>
+                                <p class="text-muted">A taste you'll surely miss</p>
                                 <div class="receipt-details">
                                     <p>${getCurrentDate()}</p>
                                 </div>
@@ -273,7 +273,7 @@
                                 </div>
                             </div>
                             <div class="receipt-footer text-center mt-4">
-                                <p>Thank you for choosing Don Macchiatos!</p>
+                                <p>Thank you for choosing Albertos Pizza!</p>
                                 <p class="text-muted">Please come again</p>
                             </div>`;
 
@@ -316,7 +316,7 @@
 
     <style>
         body {
-            background-color: #fff8e7;
+            background-color: #ffe609;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -324,7 +324,7 @@
 
         .container {
             flex: 1;
-            background-color: #fff8e7;
+            background-color: #ffbb00;
             padding: 20px;
             border-radius: 12px;
             width: 100%;

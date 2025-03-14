@@ -2,10 +2,10 @@
 @section('title', 'Create User')
 @include('Components.NaBar.navbar')
 @section('content')
-    <div class="container-fluid py-5" style="background-color: #fff8e7; min-height: calc(100vh - 56px);">
+    <div class="container-fluid py-5" style="background-color: #ffe600; min-height: calc(100vh - 56px);">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card shadow-lg border-0 rounded-lg" style="background-color: white;">
+                <div class="card shadow-lg border-0 rounded-lg" style="background-color: #ffffff;">
                     <div class="card-header bg-primary text-white">
                         <h3 class="text-center font-weight-bold my-2">User Management</h3>
                     </div>
@@ -39,6 +39,88 @@
                                         value="{{ old('username') }}" placeholder="Enter username">
                                 </div>
                                 @error('username')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="full_name" class="form-label">Full Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" name="full_name" id="full_name"
+                                        class="form-control @error('full_name') is-invalid @enderror"
+                                        value="{{ old('full_name') }}" placeholder="Enter full name">
+                                </div>
+                                @error('full_name')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" name="email" id="email"
+                                        class="form-control @error('email') is-invalid @enderror"
+                                        value="{{ old('email') }}" placeholder="Enter email address">
+                                </div>
+                                @error('email')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-home"></i></span>
+                                    <input type="text" name="address" id="address"
+                                        class="form-control @error('address') is-invalid @enderror"
+                                        value="{{ old('address') }}" placeholder="Enter address">
+                                </div>
+                                @error('address')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="contact_number" class="form-label">Contact Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="text" name="contact_number" id="contact_number"
+                                        class="form-control @error('contact_number') is-invalid @enderror"
+                                        value="{{ old('contact_number') }}" placeholder="Enter contact number">
+                                </div>
+                                @error('contact_number')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sex" class="form-label">Sex</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                                    <select name="sex" id="sex"
+                                        class="form-control @error('sex') is-invalid @enderror">
+                                        <option value="">Select Sex</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                @error('sex')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="age" class="form-label">Age</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
+                                    <input type="number" name="age" id="age"
+                                        class="form-control @error('age') is-invalid @enderror"
+                                        value="{{ old('age') }}" placeholder="Enter age" min="1">
+                                </div>
+                                @error('age')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -226,7 +308,7 @@
         min-height: 100vh;
         margin: 0;
         padding: 0;
-        background-color: #fff8e7;
+        background-color: #ffe600;
     }
 
     .container-fluid {
@@ -239,8 +321,8 @@
     }
 
     .card {
-        background-color: white;
-        border: 1px solid #d4b8a5;
+        background-color: #ffa600;
+        border: 1px solid #ffa600;
     }
 
     .table-hover tbody tr:hover {
@@ -258,7 +340,7 @@
     }
 
     .card-header.bg-primary {
-        background-color: #6b4226 !important;
+        background-color: #ffa600 !important;
     }
 
     .btn-warning {

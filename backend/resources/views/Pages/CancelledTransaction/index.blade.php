@@ -2,7 +2,7 @@
 @section('title', 'Cancelled Transactions')
 @include('Components.NaBar.navbar')
 @section('content')
-    <div class="container-fluid py-4" style="background-color: #fff8e7; min-height: calc(100vh - 56px);">
+    <div class="container-fluid py-4" style="background-color: #ffe600; min-height: calc(100vh - 56px);">
         <div class="row">
             <!-- Main Transaction Table -->
             <div class="col-md-8">
@@ -20,7 +20,7 @@
 
                 @if (count($cancelledTransactions) > 0)
                     @foreach ($cancelledTransactions as $transaction)
-                        <div class="card shadow-sm mb-3">
+                        <div class="card shadow-sm mb-3" style="background-color: #ffa600;">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div>

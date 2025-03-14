@@ -3,7 +3,7 @@
 @include('Components.NaBar.navbar')
 
 @section('content')
-    <div class="container-fluid py-4" style="background-color: #fff8e7; min-height: calc(100vh - 56px);">
+    <div class="container-fluid py-4" style="background-color: #ffe600; min-height: calc(100vh - 56px);">
         <div class="row mb-4">
             <div class="col-12">
                 <h2 class="dashboard-title">
@@ -260,7 +260,7 @@
         }
 
         .stat-card {
-            background: white;
+            background: #ffa600;
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(107, 66, 38, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -290,7 +290,7 @@
         }
 
         .stat-icon i {
-            color: #6b4226;
+            color: black;
             font-size: 1.5rem;
         }
 
@@ -299,14 +299,14 @@
         }
 
         .stat-details h6 {
-            color: #6b4226;
+            color: black;
             font-size: 0.875rem;
             margin-bottom: 0.5rem;
             font-weight: 600;
         }
 
         .stat-details h3 {
-            color: #2d1810;
+            color: black;
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
@@ -314,7 +314,7 @@
 
         .trend {
             font-size: 0.75rem;
-            color: #666;
+            color: black;
             margin: 0;
         }
 
@@ -343,7 +343,7 @@
         }
 
         .chart-card-header h5 {
-            color: #6b4226;
+            color: black;
             font-weight: 600;
             margin: 0;
         }
@@ -351,7 +351,7 @@
         .chart-actions .btn {
             padding: 0.375rem 0.75rem;
             border-color: #6b4226;
-            color: #6b4226;
+            color: black;
             transition: all 0.3s ease;
         }
 

@@ -6,20 +6,20 @@
 
 @section('content')
 
-    <div style="padding: 20px; background-color: #f7f0e3; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div style="padding: 20px; background-color: #ffe600; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
         <div style="display: flex; justify-content: flex-end; gap: 10px;">
             <a href="{{ route('product.archive') }}"
-                style="padding: 10px; background-color: #6b4226; color: white; text-decoration: none; border-radius: 8px; margin-bottom: 20px;">
+                style="padding: 10px; background-color: #ffa600; color: white; text-decoration: none; border-radius: 8px; margin-bottom: 20px;">
                 View Archived Products
             </a>
             <button onclick="showAddProductModal()"
-                style="padding: 10px; background-color: #4b3025; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 20px;">
+                style="padding: 10px; background-color: #ffa600; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 20px;">
                 + Add Product
             </button>
         </div>
         <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: #6b4226; font-weight: bold;">
-            Coffee Menu
+            Menu
         </h1>
 
         @if (session('error'))
@@ -33,7 +33,7 @@
             @if (count($products) > 0)
                 @foreach ($products as $product)
                     <div
-                        style="background-color: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%;">
+                        style="background-color: #ffa600; border-radius: 15px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%;">
                         {{-- <div
                             style="margin-bottom: 15px; height: 500px; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f8f8f8;">
                             <img src="{{ asset('images/' . ($product['product_image'] ?? 'default.jpg')) }}"
@@ -51,26 +51,26 @@
                                 data-product-id="{{ $product['product_id'] }}">
                         </div>
                         <div style="flex-grow: 1; display: flex; flex-direction: column;">
-                            <h2 style="font-size: 1.5rem; color: #4b3025; margin-bottom: 10px;">
+                            <h2 style="font-size: 1.5rem; color: black; margin-bottom: 10px;">
                                 {{ $product['product_name'] }}</h2>
-                            <p style="color: #6b4226; font-weight: bold; margin-bottom: 8px;">
+                            <p style="color: black; font-weight: bold; margin-bottom: 8px;">
                                 ₱{{ $product['product_price'] }}</p>
                             <p
-                                style="color: {{ $product['product_stock'] < 50 ? '#dc3545' : '#666' }}; margin-bottom: 8px;">
+                                style="color: {{ $product['product_stock'] < 50 ? '#dc3545' : 'black' }}; margin-bottom: 8px;">
                                 Stock: {{ $product['product_stock'] }}
                                 @if ($product['product_stock'] < 50)
                                     <span style="font-weight: bold; color: #dc3545;"> (Low Stock)</span>
                                 @endif
                             </p>
-                            <p style="color: #666; margin-bottom: 15px;">{{ $product['description'] }}</p>
+                            <p style="color: black; margin-bottom: 15px;">{{ $product['description'] }}</p>
 
                             <div style="margin-top: auto;">
                                 <div style="display: flex; gap: 10px;">
                                     <button onclick="editProduct({{ $loop->index }})"
-                                        style="flex: 1; padding: 8px; background-color: #4b3025; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                        style="flex: 1; padding: 8px; background-color: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                                         Edit
                                     </button>
-                                    <button onclick="showDeleteModal('{{ $product['product_id'] }}')"
+                                    <button onclick="showDeleteModal('{{ $product['product_id'] }}')"   
                                         style="flex: 1; padding: 8px; background-color: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                                         Delete
                                     </button>

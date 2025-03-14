@@ -29,6 +29,12 @@ class UserWEBController extends Controller
         $validated = $request->validate([
             'username' => 'required|string|unique:users,username',
             'password' => 'required|string|min:6',
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'address' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:20',
+            'sex' => 'required|in:male,female,other',
+            'age' => 'required|integer|min:1',
             'user_type' => 'required|string',
         ]);
 
@@ -42,6 +48,12 @@ class UserWEBController extends Controller
             $this->registerUser->create(
                 $validated['username'],
                 Hash::make($validated['password']),
+                $validated['full_name'],
+                $validated['email'],
+                $validated['address'],
+                $validated['contact_number'],
+                $validated['sex'],
+                $validated['age'],
                 $isAdmin,
             );
 

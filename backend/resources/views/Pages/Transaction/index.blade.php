@@ -2,12 +2,12 @@
 @section('title', 'Transactions')
 @include('Components.NaBar.navbar')
 @section('content')
-    <div class="container-fluid py-4" style="background-color: #fff8e7; min-height: calc(100vh - 56px);">
+    <div class="container-fluid py-4" style="background-color: #ffe600; min-height: calc(100vh - 56px);">
         <div class="row">
             <!-- Main Transaction Table -->
             <div class="col-md-8">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="text-brown mb-0">Transaction History</h2>
+                    <h2 class="mb-0">Transaction History</h2>
                     <div class="d-flex gap-3">
                         <input type="text" id="searchInput" class="form-control" placeholder="Search transactions..."
                             style="width: 250px;">
@@ -20,7 +20,7 @@
 
                 @if (count($transactions) > 0)
                     @foreach ($transactions as $transaction)
-                        <div class="card shadow-sm mb-3">
+                        <div class="card shadow-sm mb-3" style="background-color: #ffa600;">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div>
@@ -30,10 +30,10 @@
                                                 class="btn btn-sm btn-danger ms-2">
                                                 <i class="fas fa-ban"></i> Cancel
                                             </button>
-                                            <button onclick="openEditModal({{ $transaction->id }})"
+                                            {{-- <button onclick="openEditModal({{ $transaction->id }})"
                                                 class="btn btn-sm btn-outline-brown ms-2">
                                                 <i class="fas fa-edit"></i> Edit
-                                            </button>
+                                            </button> --}}
                                         </h5>
                                         <p class="text-muted mb-0">
                                             {{ $transaction->created_at->setTimezone('Asia/Manila')->format('M d, Y h:i A') }}
@@ -87,7 +87,7 @@
             <div class="col-md-4">
                 <div class="card shadow-lg border-0">
                     <div class="card-header bg-brown text-white py-3">
-                        <h3 class="mb-0">Transaction Summary</h3>
+                        <h3 class="mb-0 text-dark">Transaction Summary</h3>
                     </div>
                     <div class="card-body">
                         @php
@@ -208,7 +208,7 @@
 
     <style>
         .bg-brown {
-            background-color: #6b4226;
+            background-color: #ffa600;
         }
 
         .text-brown {
@@ -223,7 +223,7 @@
         .summary-item {
             padding: 15px;
             border-radius: 10px;
-            background-color: #fff8e7;
+            background-color: #ffa600;
         }
 
         .summary-item h4 {
@@ -242,12 +242,12 @@
 
         .form-control,
         .form-select {
-            border-color: #d4b8a5;
+            border-color: #ffa600;
         }
 
         .form-control:focus,
         .form-select:focus {
-            border-color: #6b4226;
+            border-color: #ffa600;
             box-shadow: 0 0 0 0.2rem rgba(107, 66, 38, 0.25);
         }
 

@@ -11,6 +11,13 @@ class UserModel extends Model
     protected $fillable = [
         'username',
         'password',
+        'full_name',
+        'email',
+        'address',
+        'contact_number',
+        'sex',
+        'age',
+        'isAdmin',
         'api_token',
     ];
 
