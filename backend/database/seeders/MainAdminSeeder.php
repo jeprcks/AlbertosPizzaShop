@@ -16,6 +16,12 @@ class MainAdminSeeder extends Seeder
                 'username' => 'mainadmin',
                 'password' => Hash::make('admin123'),
                 'isAdmin' => true,
+                'full_name' => 'Main Admin',
+                'email' => 'mainadmin@gmail.com',
+                'address' => '123 Main St, Anytown, USA',
+                'contact_number' => '1234567890',
+                'sex' => 'male',
+                'age' => 25,
                 'api_token' => Str::random(80),
                 'created_at' => now(),
                 'updated_at' => now()

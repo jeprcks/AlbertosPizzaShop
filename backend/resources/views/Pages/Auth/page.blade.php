@@ -2,7 +2,7 @@
 @section('title', 'Login')
 @section('content')
     <div class="container-fluid d-flex justify-content-center align-items-center position-relative"
-        style="height: 100vh; background: linear-gradient(135deg, #bc9681 0%, #6f4e37 100%);">
+        style="height: 100vh; background: linear-gradient(135deg, #ffe600 0%, #ffa600 100%);">
         <div class="position-absolute w-100 h-100"
             style="background: radial-gradient(circle at center, rgba(245, 230, 211, 0.1) 0%, rgba(111, 78, 55, 0.2) 100%);">
         </div>

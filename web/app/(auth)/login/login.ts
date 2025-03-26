@@ -48,14 +48,32 @@ export const handleLogin = async (
   dispatch({ type: 'SET_ERROR', error: '' });
   dispatch({ type: 'SET_LOADING', isLoading: true });
 
-  // Simulated login process
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  try {
+    const response = await fetch('http://localhost:8000/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: state.username,
+        password: state.password,
+      }),
+    });
 
-  if (state.username === 'user' && state.password === 'password') {
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Login failed');
+    }
+
+    // Save token to localStorage or context
+    localStorage.setItem('token', data.token);
+
+    // Redirect to homepage or dashboard
     router.push('/homepage');
-  } else {
-    dispatch({ type: 'SET_ERROR', error: 'Invalid username or password' });
+  } catch (error: any) {
+    dispatch({ type: 'SET_ERROR', error: error.message });
+  } finally {
+    dispatch({ type: 'SET_LOADING', isLoading: false });
   }
-
-  dispatch({ type: 'SET_LOADING', isLoading: false });
 };

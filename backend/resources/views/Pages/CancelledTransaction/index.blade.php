@@ -2,7 +2,7 @@
 @section('title', 'Cancelled Transactions')
 @include('Components.NaBar.navbar')
 @section('content')
-    <div class="container-fluid py-4" style="background-color: #fff8e7; min-height: calc(100vh - 56px);">
+    <div class="container-fluid py-4" style="background-color: ; min-height: calc(100vh - 56px);">
         <div class="row">
             <!-- Main Transaction Table -->
             <div class="col-md-8">
@@ -11,7 +11,7 @@
                     <div class="d-flex gap-3">
                         <input type="text" id="searchInput" class="form-control" placeholder="Search transactions..."
                             style="width: 250px;">
-                        <select id="sortOrder" class="form-select" style="width: 150px;">
+                        <select id="sortOrder" class="form-select" style="width: 150px; border-ffa600;">
                             <option value="newest">Newest First</option>
                             <option value="oldest">Oldest First</option>
                         </select>
@@ -20,7 +20,7 @@
 
                 @if (count($cancelledTransactions) > 0)
                     @foreach ($cancelledTransactions as $transaction)
-                        <div class="card shadow-sm mb-3">
+                        <div class="card shadow-sm mb-3" style="background-color: #ffa600;">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div>
@@ -77,8 +77,8 @@
 
             <!-- Summary Section -->
             <div class="col-md-4">
-                <div class="card shadow-lg border-0">
-                    <div class="card-header bg-danger text-white py-3">
+                <div class="card shadow-lg border-0" style="border: 2px solid #ffa600;">
+                    <div class="card-header text-white py-3" style="background-color: #ffa600;">
                         <h3 class="mb-0">Cancelled Transactions Summary</h3>
                     </div>
                     <div class="card-body">
@@ -94,17 +94,17 @@
                         @endphp
 
                         <div class="summary-item mb-4">
-                            <h4 class="text-danger">Total Cancelled</h4>
+                            <h4 style="color: #ffa600;">Total Cancelled</h4>
                             <p class="h2 mb-0">{{ $totalCancelled }}</p>
                         </div>
 
                         <div class="summary-item mb-4">
-                            <h4 class="text-danger">Total Amount Cancelled</h4>
+                            <h4 style="color: #ffa600;">Total Amount Cancelled</h4>
                             <p class="h2 mb-0">₱{{ number_format($totalAmount, 2) }}</p>
                         </div>
 
                         <div class="summary-item">
-                            <h4 class="text-danger">Total Items Cancelled</h4>
+                            <h4 style="color: #ffa600;">Total Items Cancelled</h4>
                             <p class="h2 mb-0">{{ number_format($totalItems) }}</p>
                         </div>
                     </div>
@@ -146,4 +146,10 @@
             sortOrder.addEventListener('change', filterAndSortTransactions);
         });
     </script>
+    <style>
+        .form-control,
+        .form-select {
+            border-color: #ffa600;
+        }
+    </style>
 @endsection

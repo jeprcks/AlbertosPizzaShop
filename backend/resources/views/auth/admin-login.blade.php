@@ -2,19 +2,22 @@
 @section('title', 'Admin Login')
 @section('content')
     <div class="container-fluid d-flex justify-content-center align-items-center position-relative"
-        style="height: 100vh; background: linear-gradient(135deg, #bc9681 0%, #6f4e37 100%);">
+        style="height: 100vh; background: linear-gradient(135deg, #ffe600 0%, #ffa600 100%);">
         <div class="position-absolute w-100 h-100"
             style="background: radial-gradient(circle at center, rgba(245, 230, 211, 0.1) 0%, rgba(111, 78, 55, 0.2) 100%);">
         </div>
         <div class="position-absolute text-center w-100" style="top: 10%; font-family: 'Playfair Display', serif;">
             <h1
-                style="font-size: 4.5rem; color: rgba(245, 230, 211, 0.8); letter-spacing: 0.2rem; font-weight: 700;
-                       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(245, 230, 211, 0.2);">
-                Don Macchiatos
+                style="font-size: 4.5rem; color: rgba(0, 0, 0, 0.8); letter-spacing: 0.2rem; font-weight: 700;
+                       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.2);">
+                Albertos Pizza
             </h1>
+            <h2>
+                Admin
+            </h2>
         </div>
         <div class="col-md-4 col-lg-4 col-xl-4 position-relative">
-            <div class="shadow p-4 rounded" style="background-color: rgba(255, 255, 255, 0.95);">
+            <div class="shadow p-4 rounded" style="background-color: #ffe600">
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul class="mb-0">
@@ -45,7 +48,7 @@
                     </div>
 
                     <button type="submit" class="btn w-100 py-2"
-                        style="background-color: #6f4e37; color: #fff; border: none;">
+                        style="background-color: orange; color: black; border: none;">
                         Sign In
                     </button>
                 </form>

@@ -1,262 +1,197 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Navbar from '../components/navbar';
+import { Transaction as TransactionType, mockTransactions } from './types';
 
-interface Transaction {
-    id: string;
-    date: string;
-    order_list: Array<{
-        product_id: string;
-        name: string;
-        quantity: number;
-        price: number;
-        totalPrice?: number;
-    }>;
-    total_order: number;
-    status: 'Completed';
-    user_id: number;
-    created_at: string;
-    updated_at: string;
-}
+type StatusType = 'ongoing' | 'completed' | 'cancelled' | 'all';
 
-export default function TransactionPage() {
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [sortOrder, setSortOrder] = useState('newest');
-    const router = useRouter();
+export default function Transaction() {
+  const router = useRouter();
+  const [activeStatus, setActiveStatus] = useState<StatusType>('all');
 
-    const fetchTransactions = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const userId = localStorage.getItem('userId');
+  const filteredTransactions = mockTransactions.filter(tx => {
+    if (activeStatus === 'all') return true;
+    if (activeStatus === 'ongoing') return tx.status === 'pending';
+    return tx.status === activeStatus;
+  });
 
-            if (!token || !userId) {
-                setError('Authentication required');
-                return;
-            }
+  const getStatusCount = (status: StatusType) => {
+    if (status === 'all') return mockTransactions.length;
+    if (status === 'ongoing') return mockTransactions.filter(tx => tx.status === 'pending').length;
+    return mockTransactions.filter(tx => tx.status === status).length;
+  };
 
-            const response = await fetch(`http://localhost:8000/api/sales/${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json'
-                }
-            });
+  const handleStatusChange = (transactionId: string, newStatus: 'completed' | 'cancelled') => {
+    // Here you would typically make an API call to update the status
+    console.log(`Updating transaction ${transactionId} to ${newStatus}`);
+  };
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch transactions');
-            }
+  const handleReorder = (transaction: TransactionType) => {
+    // Here you would typically handle the reorder logic
+    console.log('Reordering items:', transaction.items);
+  };
+  
+  return (
+    <div className="min-h-screen bg-[#f7f0e3]">
+      <Navbar />
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#e75f06] mb-4 sm:mb-6">Transaction History</h1>
 
-            const data = await response.json();
-            console.log('Raw API response:', data); // Debug log
-
-            // Check if data exists and has the expected structure
-            if (!data || !Array.isArray(data)) {
-                throw new Error('Invalid data structure received from API');
-            }
-
-            // Parse the order_list for each transaction
-            const parsedTransactions = data.map(transaction => ({
-                ...transaction,
-                order_list: typeof transaction.order_list === 'string'
-                    ? JSON.parse(transaction.order_list)
-                    : transaction.order_list,
-                status: 'Completed' // Add default status if not present
-            }));
-
-            console.log('Parsed transactions:', parsedTransactions); // Debug log
-            setTransactions(parsedTransactions);
-        } catch (err) {
-            console.error('Fetch error:', err);
-            setError(err instanceof Error ? err.message : 'Failed to load transactions');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchTransactions();
-    }, []);
-
-    const calculateTotalSales = () => {
-        return transactions.reduce((total, trans) => {
-            if (!Array.isArray(trans.order_list)) return total;
-            return total + (trans.total_order || 0);
-        }, 0);
-    };
-
-    const calculateTotalItems = () => {
-        return transactions.reduce((total, trans) => {
-            if (!Array.isArray(trans.order_list)) return total;
-            return total + trans.order_list.reduce((sum, item) => sum + (item.quantity || 0), 0);
-        }, 0);
-    };
-
-    const filteredTransactions = transactions
-        .filter(trans => {
-            if (!Array.isArray(trans.order_list)) return false;
-
-            // Format the transaction date to match display format
-            const transactionDate = new Date(trans.created_at).toLocaleString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            });
-
-            // Convert search term to lowercase for case-insensitive comparison
-            const searchLower = searchTerm.toLowerCase();
-
-            // Search by formatted date or product name
-            return transactionDate.toLowerCase().includes(searchLower) ||
-                trans.order_list.some(item =>
-                    item && item.name && item.name.toLowerCase().includes(searchLower)
-                );
-        })
-        .sort((a, b) => {
-            const dateA = new Date(a.created_at).getTime();
-            const dateB = new Date(b.created_at).getTime();
-            return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
-        });
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-[#fff8e7] flex items-center justify-center">
-                <div className="text-xl text-[#4b3025]">Loading transactions...</div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="min-h-screen bg-[#fff8e7] flex items-center justify-center">
-                <div className="text-xl text-red-500">{error}</div>
-            </div>
-        );
-    }
-
-    console.log('Filtered transactions:', filteredTransactions);
-
-    return (
-        <div className="min-h-screen bg-[#fff8e7] p-8">
-            <div className="container mx-auto">
-                {/* Add Back Button */}
-                <div className="mb-6">
-                    <button
-                        onClick={() => router.push('/homepage')}
-                        className="bg-[#6b4226] text-white px-4 py-2 rounded-lg hover:bg-[#3a2117] transition-colors flex items-center gap-2"
-                    >
-                        ← Back to Homepage
-                    </button>
-                </div>
-
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Transaction List Section */}
-                    <div className="lg:w-2/3">
-                        <div className="bg-white rounded-lg shadow-lg p-6">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-bold text-[#4b3025]">Transaction History</h2>
-                                <div className="flex gap-4">
-                                    <input
-                                        type="text"
-                                        placeholder="Search by product name or date (e.g., December 13, 2024)"
-                                        className="border rounded-lg px-4 py-2"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-                                    <select
-                                        className="border rounded-lg px-4 py-2"
-                                        value={sortOrder}
-                                        onChange={(e) => setSortOrder(e.target.value)}
-                                    >
-                                        <option value="newest">Newest First</option>
-                                        <option value="oldest">Oldest First</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            {filteredTransactions.map((transaction) => (
-                                <div key={transaction.id} className="bg-white rounded-lg shadow-lg p-6 mb-6 hover:shadow-xl transition-shadow">
-                                    <div className="flex justify-between items-center border-b pb-4">
-                                        <div className="flex flex-col">
-                                            <span className="bg-green-500 text-white px-4 py-1 rounded-full text-sm inline-block mb-2 w-fit">
-                                                {transaction.status}
-                                            </span>
-                                            <span className="text-gray-600 text-sm">
-                                                {new Date(transaction.created_at).toLocaleString('en-PH', {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
-                                                    hour12: true,
-                                                    timeZone: 'Asia/Manila'
-                                                })}
-                                            </span>
-                                        </div>
-                                        <div className="text-right">
-                                            <div className="text-sm text-gray-600 mb-1">Total Amount</div>
-                                            <div className="text-2xl font-bold text-[#4b3025]">
-                                                ₱{transaction.total_order.toFixed(2)}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-4">
-                                        <h4 className="font-semibold mb-3 text-[#6b4226]">Items Purchased</h4>
-                                        <div className="space-y-3">
-                                            {transaction.order_list.map((item, index) => (
-                                                <div key={index} className="flex justify-between items-center bg-[#fff8e7] p-3 rounded-lg">
-                                                    <div className="flex-1">
-                                                        <div className="font-medium">{item.name}</div>
-                                                        <div className="text-sm text-gray-600">
-                                                            Qty: {item.quantity} × ₱{item.price.toFixed(2)}
-                                                        </div>
-                                                    </div>
-                                                    <div className="font-semibold text-[#4b3025]">
-                                                        ₱{(item.quantity * item.price).toFixed(2)}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="mt-4 text-right text-gray-600">
-                                            Total Items: {transaction.order_list.reduce((sum, item) => sum + item.quantity, 0)}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Transaction Summary Section */}
-                    <div className="lg:w-1/3">
-                        <div className="bg-white rounded-lg shadow-lg">
-                            <div className="bg-[#6b4226] text-white p-4 rounded-t-lg">
-                                <h3 className="text-xl font-bold">Transaction Summary</h3>
-                            </div>
-                            <div className="p-4">
-                                <div className="bg-[#fff8e7] rounded-lg p-4 mb-4">
-                                    <h4 className="text-[#6b4226] text-lg mb-2">Total Transactions</h4>
-                                    <p className="text-2xl font-bold">{transactions.length}</p>
-                                </div>
-
-                                <div className="bg-[#fff8e7] rounded-lg p-4 mb-4">
-                                    <h4 className="text-[#6b4226] text-lg mb-2">Total Revenue</h4>
-                                    <p className="text-2xl font-bold">₱{calculateTotalSales().toFixed(2)}</p>
-                                </div>
-
-                                <div className="bg-[#fff8e7] rounded-lg p-4">
-                                    <h4 className="text-[#6b4226] text-lg mb-2">Total Items Sold</h4>
-                                    <p className="text-2xl font-bold">{calculateTotalItems()}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        {/* Status Navigation Bar */}
+        <div className="flex flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-6">
+          {(['all', 'ongoing', 'completed', 'cancelled'] as const).map((status) => (
+            <button
+              key={status}
+              onClick={() => setActiveStatus(status)}
+              className={`px-3 sm:px-6 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-medium transition-colors ${
+                activeStatus === status
+                  ? 'bg-[#e75f06] text-white'
+                  : 'bg-white text-[#e75f06] hover:bg-[#fde8d7]'
+              }`}
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)} ({getStatusCount(status)})
+            </button>
+          ))}
         </div>
-    );
+
+        {filteredTransactions.length === 0 ? (
+          <div className="text-center py-8 sm:py-12">
+            <p className="text-lg sm:text-xl text-[#e75f06]">No {activeStatus !== 'all' ? activeStatus : ''} transactions found.</p>
+          </div>
+        ) : (
+          <>
+            {/* Mobile View - Card Layout */}
+            <div className="sm:hidden space-y-4">
+              {filteredTransactions.map((tx: TransactionType) => (
+                <div key={tx.id} className="bg-white rounded-lg shadow-md p-4 space-y-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="text-[#e75f06] font-semibold">#{tx.orderNumber}</span>
+                      <div className="text-sm text-[#6b4226] mt-1">{tx.date}</div>
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      tx.status === 'completed' ? 'bg-green-100 text-green-800' :
+                      tx.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    {tx.items.map((item) => (
+                      <div key={item.id} className="text-sm text-[#6b4226]">
+                        {item.quantity}× {item.name} (₱{item.price.toFixed(2)})
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="text-base font-bold text-[#e75f06]">
+                    Total: ₱{tx.total.toFixed(2)}
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {tx.status === 'pending' && (
+                      <>
+                        <button
+                          onClick={() => handleStatusChange(tx.id, 'completed')}
+                          className="flex-1 px-3 py-1.5 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-sm"
+                        >
+                          Complete
+                        </button>
+                        <button
+                          onClick={() => handleStatusChange(tx.id, 'cancelled')}
+                          className="flex-1 px-3 py-1.5 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors text-sm"
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    )}
+                    {tx.status === 'cancelled' && (
+                      <button
+                        onClick={() => handleReorder(tx)}
+                        className="w-full px-3 py-1.5 bg-[#e75f06] text-white rounded-md hover:bg-[#d55605] transition-colors text-sm"
+                      >
+                        Re-order
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop View - Table Layout */}
+            <div className="hidden sm:block overflow-x-auto bg-white shadow-md rounded-lg">
+              <table className="w-full border-collapse">
+                <thead className="bg-[#e75f06] text-white">
+                  <tr>
+                    <th className="p-4 text-left text-sm lg:text-base">Order #</th>
+                    <th className="p-4 text-left text-sm lg:text-base">Date</th>
+                    <th className="p-4 text-left text-sm lg:text-base">Items</th>
+                    <th className="p-4 text-left text-sm lg:text-base">Total</th>
+                    <th className="p-4 text-left text-sm lg:text-base">Status</th>
+                    <th className="p-4 text-left text-sm lg:text-base">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredTransactions.map((tx: TransactionType) => (
+                    <tr key={tx.id} className="border-b border-gray-200 hover:bg-gray-100 transition">
+                      <td className="p-4 text-[#e75f06] font-semibold">#{tx.orderNumber}</td>
+                      <td className="p-4 text-[#6b4226]">{tx.date}</td>
+                      <td className="p-4">
+                        {tx.items.map((item) => (
+                          <div key={item.id} className="text-[#6b4226]">
+                            {item.quantity}× {item.name} (₱{item.price.toFixed(2)})
+                          </div>
+                        ))}
+                      </td>
+                      <td className="p-4 text-lg font-bold text-[#e75f06]">₱{tx.total.toFixed(2)}</td>
+                      <td className="p-4">
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          tx.status === 'completed' ? 'bg-green-100 text-green-800' :
+                          tx.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex gap-2">
+                          {tx.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() => handleStatusChange(tx.id, 'completed')}
+                                className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-sm"
+                              >
+                                Complete
+                              </button>
+                              <button
+                                onClick={() => handleStatusChange(tx.id, 'cancelled')}
+                                className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors text-sm"
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          )}
+                          {tx.status === 'cancelled' && (
+                            <button
+                              onClick={() => handleReorder(tx)}
+                              className="px-3 py-1 bg-[#e75f06] text-white rounded-md hover:bg-[#d55605] transition-colors text-sm"
+                            >
+                              Re-order
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </main>
+    </div>
+  );
 }
