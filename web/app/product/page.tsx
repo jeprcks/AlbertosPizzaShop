@@ -17,19 +17,19 @@ export default function CoffeeList() {
         <div className="min-h-screen bg-[#f7f0e3] font-sans">
             <Navbar />
             <div className="container mx-auto px-4 py-8">
-                <button 
+                <button
                     onClick={handleBackClick}
                     className="px-4 py-2 bg-[#4b3025] text-white rounded-lg font-bold text-base hover:bg-[#3a251d] transition-colors duration-200"
                 >
                     ← Back
                 </button>
-                
+
                 <h1 className="text-4xl font-bold text-[#6b4226] text-center my-8">Coffee Menu</h1>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {products.map((product) => (
-                        <div 
-                            key={product.id} 
+                        <div
+                            key={product.id}
                             className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col items-center"
                         >
                             <div className="w-full flex justify-center items-center p-4 bg-[#fff8e7] border-b border-gray-200">

@@ -5,7 +5,7 @@
 @include('Components.NaBar.navbar')
 
 @section('content')
-    <div class="container-fluid" style="background-color: #ffe600; min-height: 100vh; padding: 20px;">
+    <div class="container-fluid" style="background-color: white; min-height: 100vh; padding: 20px;">
         <div class="container">
             <h1
                 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: rgb(255, 153, 0); font-weight: bold;">
@@ -33,7 +33,7 @@
                                     <form action="{{ route('product.restore', $product['product_id']) }}" method="POST">
                                         @csrf
                                         <button type="submit"
-                                            style="width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                            style="width: 100%; padding: 10px; background-color: #ffe600; color: black; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                                             Restore Product
                                         </button>
                                     </form>

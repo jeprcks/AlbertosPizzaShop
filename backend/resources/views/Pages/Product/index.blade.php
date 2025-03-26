@@ -6,19 +6,19 @@
 
 @section('content')
 
-    <div style="padding: 20px; background-color: #ffe600; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div style="padding: 20px; background-color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
         <div style="display: flex; justify-content: flex-end; gap: 10px;">
             <a href="{{ route('product.archive') }}"
-                style="padding: 10px; background-color: #ffa600; color: white; text-decoration: none; border-radius: 8px; margin-bottom: 20px;">
+                style="padding: 10px; background-color: #ffe600; color: black; text-decoration: none; border-radius: 8px; margin-bottom: 20px;">
                 View Archived Products
             </a>
             <button onclick="showAddProductModal()"
-                style="padding: 10px; background-color: #ffa600; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 20px;">
+                style="padding: 10px; background-color: #ffe600; color: black; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 20px;">
                 + Add Product
             </button>
         </div>
-        <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: #6b4226; font-weight: bold;">
+        <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: #ffa600; font-weight: bold;">
             Menu
         </h1>
 
@@ -67,11 +67,11 @@
                             <div style="margin-top: auto;">
                                 <div style="display: flex; gap: 10px;">
                                     <button onclick="editProduct({{ $loop->index }})"
-                                        style="flex: 1; padding: 8px; background-color: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                        style="flex: 1; padding: 8px; background-color: #ffe600; color: black; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                                         Edit
                                     </button>
-                                    <button onclick="showDeleteModal('{{ $product['product_id'] }}')"   
-                                        style="flex: 1; padding: 8px; background-color: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                    <button onclick="showDeleteModal('{{ $product['product_id'] }}')"
+                                        style="flex: 1; padding: 8px; background-color: #dc3545; color: Black; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                                         Delete
                                     </button>
                                     <form id="delete-form-{{ $product['product_id'] }}"

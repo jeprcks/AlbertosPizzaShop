@@ -49,7 +49,8 @@
                     <p class="total-price" id="subtotal">₱0.00</p>
                 </div>
 
-                <button class="btn btn-success checkout-btn" onclick="showCheckoutModal()">Proceed to Checkout</button>
+                <button class="btn btn-warning checkout-btn" style="background-color: yellow; border-color: yellow;"
+                    onclick="showCheckoutModal()">Proceed to Checkout</button>
             </div>
         </div>
     </div>
@@ -316,7 +317,7 @@
 
     <style>
         body {
-            background-color: #ffe609;
+            background-color: white;
             min-height: 100vh;
             display: flex;
             flex-direction: column;

@@ -2,7 +2,7 @@
 @section('title', 'Transactions')
 @include('Components.NaBar.navbar')
 @section('content')
-    <div class="container-fluid py-4" style="background-color: #ffe600; min-height: calc(100vh - 56px);">
+    <div class="container-fluid py-4" style="background-color: white; min-height: calc(100vh - 56px);">
         <div class="row">
             <!-- Main Transaction Table -->
             <div class="col-md-8">

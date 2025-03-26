@@ -1,5 +1,5 @@
 export interface Product {
-    id: number;
+    id: string;
     name: string;
     description: string;
     price: number;
@@ -9,7 +9,7 @@ export interface Product {
 
 export const initialProducts: Product[] = [
     {
-        id: 1,
+        id: "1",
         name: 'Brown Spanish',
         description: 'Brown Spanish Latte is basically espresso-based coffee with milk.',
         price: 39,
@@ -17,7 +17,7 @@ export const initialProducts: Product[] = [
         image: '/images/Menu/sss.jpg',
     },
     {
-        id: 2,
+        id: "2",
         name: 'Oreo Coffee',
         description: 'Oreo Iced Coffee Recipe is perfect for a hot summer day.',
         price: 39,
@@ -25,7 +25,7 @@ export const initialProducts: Product[] = [
         image: '/images/Menu/greenpizza.jpg',
     },
     {
-        id: 3,
+        id: "3",
         name: 'Black Forest',
         description: 'A decadent symphony of flavors featuring luxurious Belgian dark chocolate and succulent Taiwanese strawberries, delicately infused with velvety milk',
         price: 39,
@@ -33,7 +33,7 @@ export const initialProducts: Product[] = [
         image: '/images/Menu/cheesepizza.jpg',
     },
     {
-        id: 4,
+        id: "4",
         name: 'Don darko',
         description: 'Crafted from the finest Belgian dark chocolate, harmoniously blended with creamy milk',
         price: 39,
@@ -41,7 +41,7 @@ export const initialProducts: Product[] = [
         image: '/images/Menu/leafpizza.jpg',
     },
     {
-        id: 5,
+        id: "5",
         name: 'Donya Berry',
         description: 'A tantalizing fusion of succulent Taiwanese strawberries mingled with creamy milk',
         price: 39,
@@ -49,7 +49,7 @@ export const initialProducts: Product[] = [
         image: '/images/Menu/bida.png',
     },
     {
-        id: 6,
+        id: "6",
         name: 'Iced Caramel',
         description: 'An exquisite blend of freshly pulled espresso, smooth milk, and luscious caramel syrup, served over a bed of ice',
         price: 39,
@@ -57,7 +57,7 @@ export const initialProducts: Product[] = [
         image: '/images/Productlist/icedcaramel.jpg',
     },
     {
-        id: 7,
+        id: "7",
         name: 'Macha',
         description: 'A tantalizing fusion of succulent Taiwanese strawberries mingled with creamy milk',
         price: 39,
@@ -65,7 +65,7 @@ export const initialProducts: Product[] = [
         image: '/images/Menu/bida.png',
     },
     {
-        id: 8,
+        id: "8",
         name: 'Macha Berry',
         description: 'A tantalizing fusion of succulent Taiwanese strawberries mingled with creamy milk',
         price: 39,
@@ -73,7 +73,7 @@ export const initialProducts: Product[] = [
         image: '/images/Menu/bida.png',
     },
     {
-        id: 9,
+        id: "9",
         name: 'Macha Berryss',
         description: 'A tantalizing fusiosadasn of succulent Taiwanese strawberries mingled with creamy milk',
         price: 39,

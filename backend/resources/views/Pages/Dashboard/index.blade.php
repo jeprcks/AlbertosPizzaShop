@@ -3,7 +3,7 @@
 @include('Components.NaBar.navbar')
 
 @section('content')
-    <div class="container-fluid py-4" style="background-color: #ffe600; min-height: calc(100vh - 56px);">
+    <div class="container-fluid py-4" style="background-color: white; min-height: calc(100vh - 56px);">
         <div class="row mb-4">
             <div class="col-12">
                 <h2 class="dashboard-title">
@@ -323,7 +323,8 @@
         }
 
         .chart-card {
-            background: white;
+            background: #ffee54;
+            border: 2px solid #ffa600;
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(107, 66, 38, 0.1);
             padding: 1.5rem;

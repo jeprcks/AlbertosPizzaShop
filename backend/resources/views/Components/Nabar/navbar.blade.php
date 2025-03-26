@@ -15,9 +15,9 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link text-black" href="/home">Home</a>
-            </li>
+            </li> --}}
             <li class="nav-item">
                 <a class="nav-link text-black" href="/dashboard">Dashboard</a>
             </li>

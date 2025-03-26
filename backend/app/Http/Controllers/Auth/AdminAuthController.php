@@ -37,7 +37,7 @@ class AdminAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect('home')->with('message', 'Login Successful!');
+            return redirect('dashboard')->with('message', 'Login Successful!');
         }
 
         return back()
